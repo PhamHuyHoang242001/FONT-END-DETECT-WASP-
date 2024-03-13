@@ -6,9 +6,11 @@ import {
   UserOutlined,
   SettingOutlined,
   LogoutOutlined,
+  UnorderedListOutlined,
 } from "@ant-design/icons";
 import { getData } from "./Router";
 import { Layout, Menu, Button, theme } from "antd";
+import ListFarm from "./components/ListFarm";
 const { Header, Sider, Content } = Layout;
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -37,7 +39,10 @@ const App = () => {
           <Menu.Item key="1" icon={<UserOutlined />}>
             User
           </Menu.Item>
-          <Menu.Item key="2" icon={<SettingOutlined />}>
+          <Menu.Item key="2" icon={<UnorderedListOutlined />}>
+            List Farm
+          </Menu.Item>
+          <Menu.Item key="3" icon={<SettingOutlined />}>
             Setting
           </Menu.Item>
         </Menu>
