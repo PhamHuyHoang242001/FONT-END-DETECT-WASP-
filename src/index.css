@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.ant-btn-primary{
+    color: #fff;
+    background: #407fdd;
+    
+}
+.custom_input_search{
+    border: 0.5px solid #407fdd;
+    border-radius: 2px;
+}
+.custom_input_search:hover {
+    border: 1px solid #407fdd;
+    box-shadow: 0px 2px 8px 0px rgba(14, 48, 99, 0.25);
+    border-radius: 2px;  
+}
+.custom_input_search:focus {
+    border: 1px solid #407fdd !important;
+    box-shadow: 0px 2px 8px 0px rgba(14, 48, 99, 0.25);
+    border-radius: 2px;
+  }
