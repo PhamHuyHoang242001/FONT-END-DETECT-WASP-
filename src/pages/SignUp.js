@@ -98,7 +98,7 @@ const SignUp = () => {
         >
           <Link
             className="text-[#407fdd] font-semibold mr-10 cursor-pointer"
-            to="/user/signin"
+            to="/signin"
           >
             Back to login
           </Link>

@@ -14,6 +14,8 @@ import { useFormik } from "formik";
 import { getData, updateData } from "../fetchMethod";
 import { Layout, Menu, Button, theme, Modal } from "antd";
 import { useNavigate } from "react-router-dom";
+import ListUser from "../components/ListUser";
+
 const { Header, Sider, Content } = Layout;
 function Home() {
   const navigate = useNavigate();
@@ -24,7 +26,7 @@ function Home() {
     isModalOpen: false,
     check: false,
   });
-  const { data, isModalOpen, check } = state;
+  const { data, isModalOpen } = state;
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -93,7 +95,7 @@ function Home() {
             className="flex-1"
           >
             <Menu.Item key="1" icon={<UserOutlined />}>
-              User
+              List User
             </Menu.Item>
             <Menu.Item key="2" icon={<UnorderedListOutlined />}>
               List Devices
@@ -141,27 +143,7 @@ function Home() {
             borderRadius: borderRadiusLG,
           }}
         >
-          {selectedNav === "1" && (
-            <div>
-              <div className="flex bg-[#F2F8FF]">
-                <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
-                  Employee
-                </div>
-                <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
-                  Employee
-                </div>
-                <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
-                  Employee
-                </div>
-                <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
-                  Employee
-                </div>
-                <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
-                  Employee
-                </div>
-              </div>
-            </div>
-          )}
+          {selectedNav === "1" && <ListUser />}
           {selectedNav === "2" && (
             <div>
               <div className="flex bg-[#F2F8FF]">

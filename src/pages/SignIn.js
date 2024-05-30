@@ -66,7 +66,7 @@ const SignIn = () => {
           <Input.Password />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           name="remember"
           valuePropName="checked"
           wrapperCol={{
@@ -75,7 +75,7 @@ const SignIn = () => {
           }}
         >
           <Checkbox>Remember me</Checkbox>
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item
           wrapperCol={{
@@ -100,7 +100,7 @@ const SignIn = () => {
         >
           <Link
             className="text-[#407fdd] font-semibold mr-10 cursor-pointer"
-            to="/user/signup"
+            to="/signup"
           >
             Create Account
           </Link>
