@@ -6,7 +6,7 @@ const SignIn = () => {
   const navigate = useNavigate();
   const onFinish = (values) => {
     console.log("Success:", values);
-    navigate("/user");
+    navigate("/");
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);

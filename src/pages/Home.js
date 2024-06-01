@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../index.css";
 import {
   MenuFoldOutlined,
@@ -8,25 +8,16 @@ import {
   LogoutOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-import { format } from "date-fns";
-import { useFormik } from "formik";
-
-import { getData, updateData } from "../fetchMethod";
-import { Layout, Menu, Button, theme, Modal } from "antd";
+import { Layout, Menu, Button, theme } from "antd";
 import { useNavigate } from "react-router-dom";
 import ListUser from "../components/ListUser";
+import ListDevice from "../components/ListDevice";
 
 const { Header, Sider, Content } = Layout;
 function Home() {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [selectedNav, setSelectedNav] = useState("1");
-  const [state, setState] = useState({
-    data: [],
-    isModalOpen: false,
-    check: false,
-  });
-  const { data, isModalOpen } = state;
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -35,52 +26,10 @@ function Home() {
   const handleMenuClick = (e) => {
     setSelectedNav(e.key);
     if (e.key === "4") {
-      navigate("/user/signin");
+      navigate("/signin");
     }
   };
-  const getData1 = async () => {
-    const res = await getData(
-      `http://103.176.178.96:8000/api/v1/camdevice/farm/${farmID}`
-    );
-    setState((pre) => ({
-      ...pre,
-      data: res,
-    }));
-  };
-  const farmID = "6584d4dd1e2df1164f11bc7b";
-  useEffect(() => {
-    getData1();
-  }, []);
-  const handleOk = () => {
-    formik.handleSubmit();
-    setState((pre) => ({
-      ...pre,
-      isModalOpen: false,
-    }));
-  };
-  const handleCancel = () => {
-    setState((pre) => ({
-      ...pre,
-      isModalOpen: false,
-    }));
-  };
-  const formik = useFormik({
-    initialValues: {
-      id: "",
-      name: "",
-      delayTime: "",
-      resolution: "",
-    },
-    onSubmit: (data) => {
-      updateData(`http://103.176.178.96:8000/api/v1/camdevice/${data.id}`, {
-        name: data.name,
-        delayTime: data.delayTime,
-        resolution: data.resolution,
-        farmID: farmID,
-      });
-      getData1();
-    },
-  });
+
   return (
     <Layout className="w-full max-h-screen min-h-screen">
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -144,122 +93,9 @@ function Home() {
           }}
         >
           {selectedNav === "1" && <ListUser />}
-          {selectedNav === "2" && (
-            <div>
-              <div className="flex bg-[#F2F8FF]">
-                <div className="w-1/5 font-bold text-black h-[3.75rem] flex justify-center items-center">
-                  Name
-                </div>
-                <div className="w-1/5 font-bold text-black h-[3.75rem] flex justify-center items-center">
-                  Delay Time
-                </div>
-                <div className="w-1/5 font-bold text-black h-[3.75rem] flex justify-center items-center">
-                  Resolution
-                </div>
-                <div className="w-1/5 font-bold text-black h-[3.75rem] flex justify-center items-center">
-                  Created At
-                </div>
-                <div className="w-1/5 font-bold text-black h-[3.75rem] flex justify-center items-center">
-                  Update dAt
-                </div>
-              </div>
-              {data ? (
-                data?.map((item, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className="flex flex-row"
-                      onClick={() => {
-                        setState((pre) => ({
-                          ...pre,
-                          isModalOpen: true,
-                        }));
-                        formik.setValues({
-                          id: item._id,
-                          name: item.name,
-                          delayTime: item.delayTime,
-                          resolution: item.resolution,
-                        });
-                      }}
-                      style={{
-                        borderBottom: " 0.5px solid #407fdd",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
-                        {item.name}
-                      </div>
-                      <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
-                        {item.delayTime}s
-                      </div>
-                      <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
-                        {item.resolution}
-                      </div>
-                      <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
-                        {format(
-                          new Date(item.createdAt),
-                          "dd/MM/yyyy HH:mm:ss"
-                        )}
-                      </div>
-                      <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
-                        {format(
-                          new Date(item.updatedAt),
-                          "dd/MM/yyyy HH:mm:ss"
-                        )}
-                      </div>
-                    </div>
-                  );
-                })
-              ) : (
-                <div className="flex justify-center mt-8 font-bold text-[14px]">
-                  {" "}
-                  No device
-                </div>
-              )}
-            </div>
-          )}
+          {selectedNav === "2" && <ListDevice />}
         </Content>
       </Layout>
-      <Modal
-        title="Edit Device"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <form onSubmit={formik.handleSubmit}>
-          <div className="flex flex-col">
-            <p className="text-4 text-[#407fdd] font-medium mb-1">Name</p>
-            <input
-              name="name"
-              type="text"
-              onChange={formik.handleChange}
-              value={formik.values.name}
-              className="custom_input_search px-2 outline-none mb-4"
-              placeholder="name"
-            />
-            <p className="text-4 text-[#407fdd] font-medium mb-1">Delay Time</p>
-            <input
-              name="delayTime"
-              type="number"
-              min={0}
-              onChange={formik.handleChange}
-              value={formik.values.delayTime}
-              className="custom_input_search px-2 outline-none mb-4"
-              placeholder="delayTime"
-            />
-            <p className="text-4 text-[#407fdd] font-medium mb-1">Resolution</p>
-            <input
-              name="resolution"
-              type="number"
-              min={0}
-              onChange={formik.handleChange}
-              value={formik.values.resolution}
-              className="custom_input_search px-2 outline-none mb-4"
-              placeholder="resolution"
-            />
-          </div>
-        </form>
-      </Modal>
     </Layout>
   );
 }
