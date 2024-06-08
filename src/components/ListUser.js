@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { getData, updateData } from "../fetchMethod";
+import { getData, updateData, deleteData } from "../fetchMethod";
 import debounce from "lodash.debounce";
 import Search from "antd/es/transfer/search";
 import { Button, Dropdown, Image, Modal, Pagination } from "antd";
 import {
-  BugOutlined,
+  HomeOutlined,
   UserSwitchOutlined,
   DeleteOutlined,
   EditOutlined,
 } from "@ant-design/icons";
 import EmptyImage from "../assets/images/empty.png";
+import ListDevice from "../components/ListDevice";
 import { useFormik } from "formik";
 import { useCallback } from "react";
+import { format } from "date-fns";
+import ListFarm from "./ListFarm";
 
 function ListUser() {
   const [userData, setUserData] = useState([]);
@@ -21,16 +24,21 @@ function ListUser() {
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [state, setState] = useState({
     count: null,
-    page_size: 2,
+    page_size: 9,
     page: 1,
+    checkRender: 1,
+    userId: "",
+    farmId: "",
+    listFarms: [],
   });
-  const { count, page, page_size } = state;
+  const { count, page, page_size, checkRender, userId, farmId, listFarms } =
+    state;
   const getAllUser = async () => {
     try {
       const response = await getData(
         `http://103.176.178.96:8000/api/v1/user/?${
           searchValue ? "searchText=" + searchValue : ""
-        }${page_size ? "&pageSize=" + page_size : ""}${
+        }${page_size ? "&pagesize=" + page_size : ""}${
           page ? "&page=" + page : ""
         }`
       );
@@ -48,20 +56,55 @@ function ListUser() {
   const EditProfileUser = async (data) => {
     try {
       const response = await updateData(
-        `http://103.176.178.96:8000/api/v1/user/${data.id}?name=${data.name}&phone=${data.phone}&address=${data.address}`
+        `http://103.176.178.96:8000/api/v1/user/${data.id}`,
+        {
+          name: data.name,
+          phone: data.phone,
+          address: data.address,
+        }
       );
       console.log(response);
+      getAllUser();
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+    }
+  };
+  const DeleteProfileUser = async (userId) => {
+    try {
+      const response = await deleteData(
+        `http://103.176.178.96:8000/api/v1/user/${userId}`
+      );
+      console.log(response);
+      getAllUser();
     } catch (error) {
       console.error("Failed to fetch data:", error);
     }
   };
   useEffect(() => {
     getAllUser();
-  }, [searchValue]);
+  }, [searchValue, page]);
   const onChange = (page1) => {
     setState((pre) => ({
       ...pre,
       page: page1,
+    }));
+  };
+  const onBack = () => {
+    setState((pre) => ({
+      ...pre,
+      checkRender: checkRender - 1,
+    }));
+  };
+  const showDevices = (id12, listFarm) => {
+    const x = listFarm.map((farm) => ({
+      value: farm._id,
+      label: farm.name,
+    }));
+    setState((pre) => ({
+      ...pre,
+      checkRender: checkRender + 1,
+      farmId: id12,
+      listFarms: x,
     }));
   };
   const formik = useFormik({
@@ -84,7 +127,7 @@ function ListUser() {
     setIsModalOpen(false);
   };
   const handleOk1 = () => {
-    console.log(deleteUserId);
+    DeleteProfileUser(deleteUserId);
     setIsModalOpen1(false);
   };
   const handleCancel1 = () => {
@@ -97,9 +140,9 @@ function ListUser() {
       label: "Sign in under user this account",
     },
     {
-      icon: <BugOutlined />,
+      icon: <HomeOutlined />,
       key: "2",
-      label: "Show devices",
+      label: "Show Farms",
     },
     {
       icon: <EditOutlined />,
@@ -122,33 +165,8 @@ function ListUser() {
     }, 500),
     []
   );
-  const itemRender = (_, type) => {
-    if (type === "prev") {
-      return (
-        <a
-          className="mr-3"
-          style={{
-            fontSize: 12,
-          }}
-        >
-          Previous
-        </a>
-      );
-    }
-    if (type === "next") {
-      return (
-        <a
-          className=" ml-3"
-          style={{
-            fontSize: 12,
-          }}
-        >
-          Next
-        </a>
-      );
-    }
-  };
-  return (
+
+  return checkRender === 1 ? (
     <div>
       <div className="w-full flex flex-row">
         <div className="w-1/2 ">
@@ -207,7 +225,7 @@ function ListUser() {
           Address
         </div>
         <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
-          List Farms
+          Date Created
         </div>
       </div>
       <div>
@@ -224,6 +242,11 @@ function ListUser() {
                         case "1":
                           break;
                         case "2":
+                          setState((pre) => ({
+                            ...pre,
+                            checkRender: 2,
+                            userId: item._id,
+                          }));
                           break;
                         case "3":
                           formik.setValues({
@@ -301,7 +324,7 @@ function ListUser() {
                 {item.address ? item.address : "none"}
               </div>
               <div className="w-1/5  font-medium text-black h-[3.75rem] flex justify-center items-center">
-                Farm1, Farm 2, Farm 3, ...
+                {format(new Date(item.createdAt), "dd/MM/yyyy HH:mm:ss")}
               </div>
             </div>
           ))
@@ -313,20 +336,21 @@ function ListUser() {
             </div>
           </div>
         )}
+        {userData?.length !== 0 && (
+          <div className="flex mt-2 ">
+            <Pagination
+              showSizeChanger={false}
+              defaultPageSize={page_size}
+              onChange={onChange}
+              defaultCurrent={1}
+              total={count}
+              current={page}
+              className="mx-auto"
+            />
+          </div>
+        )}
       </div>
-      {userData?.length !== 0 && (
-        <div className="is-flex is-justify-content-center is-align-content-center mt-2 staff_leave_footer">
-          <Pagination
-            showSizeChanger={false}
-            itemRender={itemRender}
-            defaultPageSize={4}
-            onChange={onChange}
-            defaultCurrent={1}
-            total={count}
-            current={page}
-          />
-        </div>
-      )}
+
       <Modal
         title="Edit profile"
         open={isModalOpen}
@@ -374,6 +398,19 @@ function ListUser() {
         <div>Are you sure you want to delete this user?</div>
       </Modal>
     </div>
+  ) : checkRender === 2 ? (
+    <ListFarm
+      userId={userId}
+      onBack={onBack}
+      showDevices={showDevices}
+    ></ListFarm>
+  ) : (
+    <ListDevice
+      userId={userId}
+      farmId={farmId}
+      onBack={onBack}
+      listFarms={listFarms}
+    ></ListDevice>
   );
 }
 

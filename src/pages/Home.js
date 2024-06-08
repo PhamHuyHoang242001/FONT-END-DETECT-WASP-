@@ -66,7 +66,7 @@ function Home() {
         </div>
       </Sider>
       <Layout>
-        <Header
+        {/* <Header
           style={{
             padding: 0,
             background: colorBgContainer,
@@ -82,11 +82,10 @@ function Home() {
               height: 64,
             }}
           />
-        </Header>
+        </Header> */}
         <Content
           style={{
-            margin: "24px 16px",
-            padding: 24,
+            padding: 16,
             minHeight: 280,
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
