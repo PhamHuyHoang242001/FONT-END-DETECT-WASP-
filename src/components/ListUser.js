@@ -24,7 +24,7 @@ function ListUser() {
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [state, setState] = useState({
     count: null,
-    page_size: 9,
+    page_size: 10,
     page: 1,
     checkRender: 1,
     userId: "",
@@ -212,19 +212,19 @@ function ListUser() {
         </div>
       </div>
       <div className="flex bg-[#F2F8FF] mt-3">
-        <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
+        <div className="w-1/5 font-bold text-black h-[3.75rem] flex justify-center items-center">
           Name
         </div>
-        <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
+        <div className="w-1/5 font-bold text-black h-[3.75rem] flex justify-center items-center">
           Phone
         </div>
-        <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
+        <div className="w-1/5 font-bold text-black h-[3.75rem] flex justify-center items-center">
           Email
         </div>
-        <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
+        <div className="w-1/5 font-bold text-black h-[3.75rem] flex justify-center items-center">
           Address
         </div>
-        <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
+        <div className="w-1/5 font-bold text-black h-[3.75rem] flex justify-center items-center">
           Date Created
         </div>
       </div>

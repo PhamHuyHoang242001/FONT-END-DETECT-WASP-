@@ -1,19 +1,49 @@
 import { format } from "date-fns";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import debounce from "lodash.debounce";
 import "../index.css";
 import { useFormik } from "formik";
 import { ArrowLeftOutlined, DeleteOutlined } from "@ant-design/icons";
 import { getData, updateData, deleteData } from "../fetchMethod";
 import EmptyImage from "../assets/images/empty.png";
-import { Button, Image, Modal, Select } from "antd";
+import { Button, Image, Modal, Pagination, Select } from "antd";
+import Search from "antd/es/transfer/search";
 // import { useNavigate } from "react-router-dom";
 function ListDevice(props) {
+  const statusDevice = [
+    {
+      value: "all",
+      lable: "All",
+    },
+    {
+      value: "sold",
+      lable: "Sold",
+    },
+    {
+      value: "available",
+      lable: "Available",
+    },
+  ];
   const [state, setState] = useState({
     isModalOpen: false,
     dataFarm: [],
     listDeviceNotUse: [],
+    count: null,
+    page_size: 10,
+    page: 1,
+    searchValue: "",
+    status: "all",
   });
-  const { isModalOpen, dataFarm, listDeviceNotUse } = state;
+  const {
+    count,
+    page,
+    page_size,
+    isModalOpen,
+    dataFarm,
+    listDeviceNotUse,
+    searchValue,
+    status,
+  } = state;
   const handleOk = () => {
     formik.handleSubmit();
     setState((pre) => ({
@@ -27,6 +57,16 @@ function ListDevice(props) {
       isModalOpen: false,
     }));
   };
+  const updateSearchValue = useCallback(
+    debounce((event) => {
+      setState((pre) => ({
+        ...pre,
+        page: 1,
+        searchValue: event,
+      }));
+    }, 500),
+    []
+  );
   const formik = useFormik({
     initialValues: {
       id: "",
@@ -35,7 +75,11 @@ function ListDevice(props) {
       resolution: "",
     },
     onSubmit: (data) => {
-      updateDevice(data);
+      if (data.id) {
+        updateDevice(data);
+      } else {
+        console.log(data);
+      }
     },
   });
   const updateDevice = async (data) => {
@@ -60,10 +104,18 @@ function ListDevice(props) {
         dataFarm: res,
       }));
     } else {
-      const res = await getData(`http://103.176.178.96:8000/api/v1/camdevice`);
+      const res = await getData(
+        `http://103.176.178.96:8000/api/v1/camdevice/?${
+          searchValue ? "searchText=" + searchValue : ""
+        }${page_size ? "&pagesize=" + page_size : ""}${
+          page ? "&page=" + page : ""
+        }`
+      );
       setState((pre) => ({
         ...pre,
         dataFarm: res.results,
+        page: res?.page,
+        count: res?.count,
       }));
     }
   };
@@ -78,11 +130,20 @@ function ListDevice(props) {
   };
   useEffect(() => {
     getData1();
-    getListDeviceNotUse();
-  }, []);
+    if (props.userId) {
+      getListDeviceNotUse();
+    }
+    console.log(status);
+  }, [page, searchValue, status]);
+  const onChange = (page1) => {
+    setState((pre) => ({
+      ...pre,
+      page: page1,
+    }));
+  };
   return (
     <div>
-      {props.onBack && (
+      {props.onBack ? (
         <div className="flex flex-row justify-between">
           <Button
             className="bg-blue-700 text-white w-[100px] flex flex-row  justify-center items-center mb-3"
@@ -117,8 +178,72 @@ function ListDevice(props) {
             />
           </div>
         </div>
+      ) : (
+        <div className="w-full flex flex-row">
+          <div className="w-1/2 ">
+            <Button
+              onClick={() => {
+                setState((pre) => ({
+                  ...pre,
+                  isModalOpen: true,
+                }));
+                formik.setValues({
+                  id: "",
+                  name: "",
+                  delayTime: "",
+                  resolution: "",
+                });
+              }}
+              className="bg-blue-700 text-white w-[150px] flex flex-row "
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 4.375V15.625M15.625 10H4.375"
+                  stroke="#fff"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              Add new Device
+            </Button>
+          </div>
+          <div className="w-1/2 flex flex-row gap-2">
+            <Search
+              placeholder="Search name"
+              enterButton="Search"
+              size="large"
+              allowClear
+              onChange={(e) => {
+                updateSearchValue(e.target.value);
+              }}
+            />
+            <Select
+              size="middle"
+              value={status}
+              onChange={(e) => {
+                setState((pre) => ({
+                  ...pre,
+                  status: e,
+                }));
+              }}
+              style={{
+                width: 200,
+                color: "black",
+                marginLeft: "8px",
+              }}
+              options={statusDevice}
+            />
+          </div>
+        </div>
       )}
-      <div className="flex bg-[#F2F8FF]">
+      <div className="flex bg-[#F2F8FF] mt-3">
         <div className="w-1/6 font-bold text-black h-[3.75rem] flex justify-center items-center">
           Name
         </div>
@@ -246,8 +371,21 @@ function ListDevice(props) {
           </div>
         </div>
       )}
+      {dataFarm?.length !== 0 && (
+        <div className="flex mt-2 ">
+          <Pagination
+            showSizeChanger={false}
+            defaultPageSize={page_size}
+            onChange={onChange}
+            defaultCurrent={1}
+            total={count}
+            current={page}
+            className="mx-auto"
+          />
+        </div>
+      )}
       <Modal
-        title="Edit Device"
+        title={formik.values.id ? "Edit Device" : "Add Device"}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}

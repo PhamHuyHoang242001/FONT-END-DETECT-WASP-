@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import "../index.css";
 import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   UserOutlined,
   SettingOutlined,
   LogoutOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, Button, theme } from "antd";
+import { Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
 import ListUser from "../components/ListUser";
 import ListDevice from "../components/ListDevice";
@@ -31,7 +29,7 @@ function Home() {
   };
 
   return (
-    <Layout className="w-full max-h-screen min-h-screen">
+    <Layout className="w-full h-fit min-h-screen">
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical" />
         <div className="flex flex-col h-full">
@@ -50,7 +48,7 @@ function Home() {
               List Devices
             </Menu.Item>
             <Menu.Item key="3" icon={<SettingOutlined />}>
-              Setting
+              Add Device For User
             </Menu.Item>
           </Menu>
           <Menu
