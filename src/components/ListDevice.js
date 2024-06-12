@@ -3,8 +3,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import debounce from "lodash.debounce";
 import "../index.css";
 import { useFormik } from "formik";
-import { ArrowLeftOutlined, DeleteOutlined } from "@ant-design/icons";
-import { getData, updateData, deleteData } from "../fetchMethod";
+import {
+  ArrowLeftOutlined,
+  DeleteOutlined,
+  PlusCircleOutlined,
+} from "@ant-design/icons";
+import { getData, updateData, createData, deleteData } from "../fetchMethod";
 import EmptyImage from "../assets/images/empty.png";
 import { Button, Image, Modal, Pagination, Select } from "antd";
 import Search from "antd/es/transfer/search";
@@ -33,6 +37,7 @@ function ListDevice(props) {
     page: 1,
     searchValue: "",
     status: "all",
+    deviceID: "",
   });
   const {
     count,
@@ -43,6 +48,7 @@ function ListDevice(props) {
     listDeviceNotUse,
     searchValue,
     status,
+    deviceID,
   } = state;
   const handleOk = () => {
     formik.handleSubmit();
@@ -78,10 +84,11 @@ function ListDevice(props) {
       if (data.id) {
         updateDevice(data);
       } else {
-        console.log(data);
+        addNewDevice(data);
       }
     },
   });
+
   const updateDevice = async (data) => {
     const x = await updateData(
       `http://103.176.178.96:8000/api/v1/camdevice/${data.id}`,
@@ -93,6 +100,32 @@ function ListDevice(props) {
     );
     getData1();
     console.log(x);
+  };
+  const addNewDevice = async (data) => {
+    const x = await createData(`http://103.176.178.96:8000/api/v1/camdevice`, {
+      name: data.name,
+      delayTime: data.delayTime,
+      resolution: data.resolution,
+    });
+    getData1();
+    console.log(x);
+  };
+  const addDeviceInFarm = async () => {
+    if (deviceID !== "") {
+      let x = await updateData(
+        `http://103.176.178.96:8000/api/v1/camdevice/${deviceID}`,
+        {
+          farmID: props.farmId,
+        }
+      );
+      console.log(x);
+      setState((pre) => ({
+        ...pre,
+        deviceID: "",
+      }));
+      getData1();
+      getListDeviceNotUse();
+    }
   };
   const getData1 = async () => {
     if (props?.farmId) {
@@ -109,7 +142,7 @@ function ListDevice(props) {
           searchValue ? "searchText=" + searchValue : ""
         }${page_size ? "&pagesize=" + page_size : ""}${
           page ? "&page=" + page : ""
-        }`
+        }${status ? "&status=" + status : ""}`
       );
       setState((pre) => ({
         ...pre,
@@ -133,7 +166,6 @@ function ListDevice(props) {
     if (props.userId) {
       getListDeviceNotUse();
     }
-    console.log(status);
   }, [page, searchValue, status]);
   const onChange = (page1) => {
     setState((pre) => ({
@@ -152,22 +184,17 @@ function ListDevice(props) {
             <ArrowLeftOutlined />
             {"  "}Back
           </Button>
-          <div className="text-black font-medium">
+          <div className="text-black font-medium flex flex-row gap-3 items-center">
             Add Device :
             <Select
               size="middle"
               defaultValue=""
-              value={listDeviceNotUse[0]?.value}
-              onChange={async (e) => {
-                let x = await updateData(
-                  `http://103.176.178.96:8000/api/v1/camdevice/${e}`,
-                  {
-                    farmID: props.farmId,
-                  }
-                );
-                console.log(x);
-                getData1();
-                getListDeviceNotUse();
+              value={deviceID}
+              onChange={(e) => {
+                setState((pre) => ({
+                  ...pre,
+                  deviceID: e,
+                }));
               }}
               style={{
                 width: 200,
@@ -176,6 +203,14 @@ function ListDevice(props) {
               }}
               options={listDeviceNotUse}
             />
+            <Button
+              onClick={addDeviceInFarm}
+              className="bg-green-700 text-white w-[150px] flex flex-row justify-center  items-center w-20"
+            >
+              <PlusCircleOutlined />
+
+              {"Add"}
+            </Button>
           </div>
         </div>
       ) : (
@@ -323,6 +358,8 @@ function ListDevice(props) {
                     }}
                     options={props.listFarms}
                   />
+                ) : item.status ? (
+                  "Available"
                 ) : (
                   "Sold"
                 )}

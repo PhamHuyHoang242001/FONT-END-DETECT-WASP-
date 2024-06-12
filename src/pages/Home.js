@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../index.css";
 import {
   UserOutlined,
-  SettingOutlined,
+  PlusSquareOutlined,
   LogoutOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
@@ -10,6 +10,7 @@ import { Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
 import ListUser from "../components/ListUser";
 import ListDevice from "../components/ListDevice";
+import SoldDevice from "../components/SoldDevice";
 
 const { Header, Sider, Content } = Layout;
 function Home() {
@@ -47,7 +48,7 @@ function Home() {
             <Menu.Item key="2" icon={<UnorderedListOutlined />}>
               List Devices
             </Menu.Item>
-            <Menu.Item key="3" icon={<SettingOutlined />}>
+            <Menu.Item key="3" icon={<PlusSquareOutlined />}>
               Add Device For User
             </Menu.Item>
           </Menu>
@@ -91,6 +92,7 @@ function Home() {
         >
           {selectedNav === "1" && <ListUser />}
           {selectedNav === "2" && <ListDevice />}
+          {selectedNav === "3" && <SoldDevice />}
         </Content>
       </Layout>
     </Layout>

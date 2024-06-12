@@ -3,14 +3,17 @@ import React, { useEffect, useState } from "react";
 import "../index.css";
 import { useFormik } from "formik";
 import EmptyImage from "../assets/images/empty.png";
+import * as Yup from "yup";
+
 import {
   EyeOutlined,
   EditOutlined,
   DeleteOutlined,
   ArrowLeftOutlined,
 } from "@ant-design/icons";
-import { getData, updateData, deleteData } from "../fetchMethod";
+import { getData, updateData, deleteData, createData } from "../fetchMethod";
 import { Button, Modal, Image } from "antd";
+import { twMerge } from "tailwind-merge";
 // import { useNavigate } from "react-router-dom";
 function ListFarm(props) {
   const [state, setState] = useState({
@@ -20,10 +23,12 @@ function ListFarm(props) {
   const { isModalOpen, dataFarm } = state;
   const handleOk = () => {
     formik.handleSubmit();
-    setState((pre) => ({
-      ...pre,
-      isModalOpen: false,
-    }));
+    if (!formik.errors.name) {
+      setState((pre) => ({
+        ...pre,
+        isModalOpen: false,
+      }));
+    }
   };
   const DeleteFarm = async (farmId) => {
     try {
@@ -47,8 +52,15 @@ function ListFarm(props) {
       id: "",
       name: "",
     },
+    validationSchema: Yup.object().shape({
+      name: Yup.string().required("First name is required"),
+    }),
     onSubmit: (data) => {
-      updateFarm(data);
+      if (data.id) {
+        updateFarm(data);
+      } else {
+        AddNewFarm(data);
+      }
     },
   });
   const updateFarm = async (data) => {
@@ -58,6 +70,14 @@ function ListFarm(props) {
         name: data.name,
       }
     );
+    console.log(x);
+    getData1();
+  };
+  const AddNewFarm = async (data) => {
+    const x = await createData(`http://103.176.178.96:8000/api/v1/farm`, {
+      name: data.name,
+      ownerID: props.userId,
+    });
     console.log(x);
     getData1();
   };
@@ -76,13 +96,44 @@ function ListFarm(props) {
   }, []);
   return (
     <div>
-      <div>
+      <div className="w-full flex justify-between">
         <Button
           className="bg-blue-700 text-white w-[100px] flex flex-row  justify-center items-center mb-3"
           onClick={props.onBack}
         >
           <ArrowLeftOutlined />
           {"  "}Back
+        </Button>
+
+        <Button
+          onClick={() => {
+            setState((pre) => ({
+              ...pre,
+              isModalOpen: true,
+            }));
+            formik.setValues({
+              id: "",
+              name: "",
+            });
+          }}
+          className="bg-blue-700 text-white w-[150px] flex flex-row "
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10 4.375V15.625M15.625 10H4.375"
+              stroke="#fff"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          Add new Device
         </Button>
       </div>
       <div className="flex bg-[#F2F8FF]">
@@ -113,7 +164,7 @@ function ListFarm(props) {
                 {item.name}
               </div>
               <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
-                {/* {item.numberDevice} */} 2
+                {item.numberDevices}
               </div>
               <div className="w-1/5 font-semibold text-black h-[3.75rem] flex justify-center items-center">
                 {format(new Date(item.createdAt), "dd/MM/yyyy HH:mm:ss")}
@@ -171,7 +222,7 @@ function ListFarm(props) {
         </div>
       )}
       <Modal
-        title="Edit Farm"
+        title={formik.values.id ? "Edit Farm" : "Add New Farm"}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -182,9 +233,13 @@ function ListFarm(props) {
             <input
               name="name"
               type="text"
+              id="name"
               onChange={formik.handleChange}
               value={formik.values.name}
-              className="custom_input_search px-2 outline-none mb-4"
+              className={twMerge(
+                "custom_input_search px-2 outline-none mb-4",
+                formik.errors.name && "border-red-500"
+              )}
               placeholder="name"
             />
           </div>

@@ -201,7 +201,7 @@ function ListUser() {
         </div>
         <div className="w-1/2">
           <Search
-            placeholder="Search name / phone"
+            placeholder="Search name / phone / address"
             enterButton="Search"
             size="large"
             allowClear
