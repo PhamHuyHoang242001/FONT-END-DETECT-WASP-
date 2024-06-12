@@ -8,6 +8,7 @@ import {
   UserSwitchOutlined,
   DeleteOutlined,
   EditOutlined,
+  PlusSquareOutlined,
 } from "@ant-design/icons";
 import EmptyImage from "../assets/images/empty.png";
 import ListDevice from "../components/ListDevice";
@@ -15,6 +16,7 @@ import { useFormik } from "formik";
 import { useCallback } from "react";
 import { format } from "date-fns";
 import ListFarm from "./ListFarm";
+import ListDeviceAvailable from "./ListDeviceAvailable";
 
 function ListUser() {
   const [userData, setUserData] = useState([]);
@@ -30,9 +32,18 @@ function ListUser() {
     userId: "",
     farmId: "",
     listFarms: [],
+    userName: "",
   });
-  const { count, page, page_size, checkRender, userId, farmId, listFarms } =
-    state;
+  const {
+    count,
+    page,
+    page_size,
+    checkRender,
+    userId,
+    farmId,
+    listFarms,
+    userName,
+  } = state;
   const getAllUser = async () => {
     try {
       const response = await getData(
@@ -95,6 +106,12 @@ function ListUser() {
       checkRender: checkRender - 1,
     }));
   };
+  const onBack1 = () => {
+    setState((pre) => ({
+      ...pre,
+      checkRender: checkRender + 1,
+    }));
+  };
   const showDevices = (id12, listFarm) => {
     const x = listFarm.map((farm) => ({
       value: farm._id,
@@ -145,12 +162,17 @@ function ListUser() {
       label: "Show Farms",
     },
     {
-      icon: <EditOutlined />,
+      icon: <PlusSquareOutlined />,
       key: "3",
+      label: "Add device for user",
+    },
+    {
+      icon: <EditOutlined />,
+      key: "4",
       label: "Edit profile",
     },
     {
-      key: "4",
+      key: "5",
       label: "Delete",
       icon: <DeleteOutlined />,
     },
@@ -249,6 +271,13 @@ function ListUser() {
                           }));
                           break;
                         case "3":
+                          setState((pre) => ({
+                            ...pre,
+                            checkRender: 0,
+                            userName: item.name,
+                          }));
+                          break;
+                        case "4":
                           formik.setValues({
                             id: item._id,
                             name: item.name,
@@ -257,7 +286,7 @@ function ListUser() {
                           });
                           setIsModalOpen(true);
                           break;
-                        case "4":
+                        case "5":
                           setDeleteUserId(item._id);
                           setIsModalOpen1(true);
                           break;
@@ -404,13 +433,15 @@ function ListUser() {
       onBack={onBack}
       showDevices={showDevices}
     ></ListFarm>
-  ) : (
+  ) : checkRender === 3 ? (
     <ListDevice
       userId={userId}
       farmId={farmId}
       onBack={onBack}
       listFarms={listFarms}
     ></ListDevice>
+  ) : (
+    <ListDeviceAvailable userId={userId} onBack={onBack1} userName={userName} />
   );
 }
 

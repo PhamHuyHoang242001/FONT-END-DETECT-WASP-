@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "../index.css";
 import {
   UserOutlined,
-  PlusSquareOutlined,
   LogoutOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
@@ -10,12 +9,12 @@ import { Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
 import ListUser from "../components/ListUser";
 import ListDevice from "../components/ListDevice";
-import SoldDevice from "../components/SoldDevice";
+// import SoldDevice from "../components/SoldDevice";
 
-const { Header, Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 function Home() {
   const navigate = useNavigate();
-  const [collapsed, setCollapsed] = useState(false);
+  // const [collapsed, setCollapsed] = useState(false);
   const [selectedNav, setSelectedNav] = useState("1");
 
   const {
@@ -31,7 +30,7 @@ function Home() {
 
   return (
     <Layout className="w-full h-fit min-h-screen">
-      <Sider trigger={null} collapsible collapsed={collapsed}>
+      <Sider trigger={null} collapsible>
         <div className="demo-logo-vertical" />
         <div className="flex flex-col h-full">
           <Menu
@@ -40,25 +39,38 @@ function Home() {
             defaultSelectedKeys={["1"]}
             selectedKeys={[selectedNav]}
             onClick={handleMenuClick}
-            className="flex-1"
+            className="flex-1 "
           >
-            <Menu.Item key="1" icon={<UserOutlined />}>
+            <Menu.Item
+              key="1"
+              icon={<UserOutlined />}
+              className="border-[#1677FF] border"
+            >
               List User
             </Menu.Item>
-            <Menu.Item key="2" icon={<UnorderedListOutlined />}>
+            <Menu.Item
+              key="2"
+              icon={<UnorderedListOutlined />}
+              className=" border-[#1677FF] border "
+            >
               List Devices
             </Menu.Item>
-            <Menu.Item key="3" icon={<PlusSquareOutlined />}>
+            {/* <Menu.Item key="3" icon={<PlusSquareOutlined />}>
               Add Device For User
-            </Menu.Item>
+            </Menu.Item> */}
           </Menu>
           <Menu
             theme="dark"
             mode="inline"
             selectedKeys={[selectedNav]}
             onClick={handleMenuClick}
+            className="mb-16"
           >
-            <Menu.Item key="4" icon={<LogoutOutlined />}>
+            <Menu.Item
+              key="4"
+              icon={<LogoutOutlined />}
+              className=" border-[#1677FF]  border "
+            >
               Logout
             </Menu.Item>
           </Menu>
@@ -92,7 +104,7 @@ function Home() {
         >
           {selectedNav === "1" && <ListUser />}
           {selectedNav === "2" && <ListDevice />}
-          {selectedNav === "3" && <SoldDevice />}
+          {/* {selectedNav === "3" && <SoldDevice />} */}
         </Content>
       </Layout>
     </Layout>
