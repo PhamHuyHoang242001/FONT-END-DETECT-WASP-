@@ -152,11 +152,6 @@ function ListUser() {
   };
   const items = [
     {
-      icon: <UserSwitchOutlined />,
-      key: "1",
-      label: "Sign in under user this account",
-    },
-    {
       icon: <HomeOutlined />,
       key: "2",
       label: "Show Farms",
@@ -274,6 +269,7 @@ function ListUser() {
                           setState((pre) => ({
                             ...pre,
                             checkRender: 0,
+                            userId: item._id,
                             userName: item.name,
                           }));
                           break;

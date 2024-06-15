@@ -335,7 +335,7 @@ function ListDevice(props) {
               </div>
               <div
                 className="w-1/6 font-semibold h-[3.75rem] flex justify-center items-center"
-                style={{ color: "red" }}
+                style={{ color: item.status ? "red" : "#87FF74" }}
               >
                 {props.farmId ? (
                   <Select
@@ -359,9 +359,9 @@ function ListDevice(props) {
                     options={props.listFarms}
                   />
                 ) : item.status ? (
-                  "Available"
-                ) : (
                   "Sold"
+                ) : (
+                  "Available"
                 )}
               </div>
               <div

@@ -60,7 +60,7 @@ function ListDeviceAvailable(props) {
         searchValue ? "searchText=" + searchValue : ""
       }${page_size ? "&pagesize=" + page_size : ""}${
         page ? "&page=" + page : ""
-      }${"&status=false"}`
+      }${"&status=available"}`
     );
 
     setState((pre) => ({
@@ -151,9 +151,9 @@ function ListDeviceAvailable(props) {
               </div>
               <div
                 className="w-1/6 font-semibold h-[3.75rem] flex justify-center items-center"
-                style={{ color: "red" }}
+                style={{ color: item.status ? "red" : "#87FF74" }}
               >
-                {item.status ? "Available" : "Sold"}
+                {item.status ? "Sold" : "Available"}
               </div>
               <div
                 className="w-1/6 font-semibold h-[3.75rem] flex justify-center  items-center"
