@@ -41,13 +41,13 @@ function Home() {
             className="flex-1 "
           >
             <div className=" w-20 mx-auto my-2">
-              <Image
+              <img
                 src="/logoPage.png"
                 alt="logo"
                 onClick={() => {
                   window.location.reload();
                 }}
-                title=""
+                className="cursor-pointer"
               />
             </div>
             <Menu.Item
