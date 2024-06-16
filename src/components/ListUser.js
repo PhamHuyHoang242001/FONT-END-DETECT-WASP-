@@ -17,6 +17,7 @@ import { useCallback } from "react";
 import { format } from "date-fns";
 import ListFarm from "./ListFarm";
 import ListDeviceAvailable from "./ListDeviceAvailable";
+import ListImage from "./ListImage";
 
 function ListUser() {
   const [userData, setUserData] = useState([]);
@@ -31,6 +32,8 @@ function ListUser() {
     checkRender: 1,
     userId: "",
     farmId: "",
+    deviceId: "",
+    deviceName: "",
     listFarms: [],
     userName: "",
   });
@@ -42,6 +45,8 @@ function ListUser() {
     userId,
     farmId,
     listFarms,
+    deviceId,
+    deviceName,
     userName,
   } = state;
   const getAllUser = async () => {
@@ -104,6 +109,14 @@ function ListUser() {
     setState((pre) => ({
       ...pre,
       checkRender: checkRender - 1,
+    }));
+  };
+  const onShow = (id, name) => {
+    setState((pre) => ({
+      ...pre,
+      checkRender: checkRender + 1,
+      deviceId: id,
+      deviceName: name,
     }));
   };
   const onBack1 = () => {
@@ -434,8 +447,15 @@ function ListUser() {
       userId={userId}
       farmId={farmId}
       onBack={onBack}
+      onShow={onShow}
       listFarms={listFarms}
     ></ListDevice>
+  ) : checkRender === 4 ? (
+    <ListImage
+      onBack={onBack}
+      deviceId={deviceId}
+      deviceName={deviceName}
+    ></ListImage>
   ) : (
     <ListDeviceAvailable userId={userId} onBack={onBack1} userName={userName} />
   );
