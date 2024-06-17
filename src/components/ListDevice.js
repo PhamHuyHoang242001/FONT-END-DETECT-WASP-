@@ -508,6 +508,8 @@ function ListDevice(props) {
               }}
               style={{
                 color: "black",
+                borderColor:
+                  formik.submitCount > 0 && formik.errors.resolution && "red",
               }}
               options={ResolutionSelect}
             />
