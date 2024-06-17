@@ -141,7 +141,7 @@ function ListFarm(props) {
               strokeLinejoin="round"
             />
           </svg>
-          Add new Device
+          Add new farm
         </Button>
       </div>
       <div className="flex bg-[#F2F8FF]">

@@ -5,11 +5,10 @@ import {
   LogoutOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, theme } from "antd";
+import { Image, Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
 import ListUser from "../components/ListUser";
 import ListDevice from "../components/ListDevice";
-// import SoldDevice from "../components/SoldDevice";
 
 const { Sider, Content } = Layout;
 function Home() {
@@ -30,9 +29,9 @@ function Home() {
 
   return (
     <Layout className="w-full h-fit min-h-screen">
-      <Sider trigger={null} collapsible>
+      <Sider trigger={null} collapsible width={"160px"}>
         <div className="demo-logo-vertical" />
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full ">
           <Menu
             theme="dark"
             mode="inline"
@@ -41,10 +40,20 @@ function Home() {
             onClick={handleMenuClick}
             className="flex-1 "
           >
+            <div className=" w-20 mx-auto my-2">
+              <img
+                src="/logoPage.png"
+                alt="logo"
+                onClick={() => {
+                  window.location.reload();
+                }}
+                className="cursor-pointer"
+              />
+            </div>
             <Menu.Item
               key="1"
               icon={<UserOutlined />}
-              className="border-[#1677FF] border"
+              className="border-[#1677FF] border "
             >
               List User
             </Menu.Item>

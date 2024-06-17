@@ -7,6 +7,7 @@ import {
   ArrowLeftOutlined,
   DeleteOutlined,
   PlusCircleOutlined,
+  FileImageOutlined,
 } from "@ant-design/icons";
 import { getData, updateData, createData, deleteData } from "../fetchMethod";
 import EmptyImage from "../assets/images/empty.png";
@@ -388,9 +389,20 @@ function ListDevice(props) {
                 )}
               </div>
               <div
-                className="w-1/6 font-semibold h-[3.75rem] flex justify-center  items-center"
+                className="w-1/6 font-semibold h-[3.75rem] flex gap-2 justify-center  items-center"
                 style={{ color: "red" }}
               >
+                {props.farmId && (
+                  <Button
+                    onClick={() => {
+                      props.onShow(item._id, item.name);
+                    }}
+                    className="bg-blue-700 text-white w-[90px] flex flex-row  justify-center items-center "
+                  >
+                    <FileImageOutlined />
+                    Show
+                  </Button>
+                )}
                 <Button
                   onClick={async () => {
                     if (props.farmId) {
