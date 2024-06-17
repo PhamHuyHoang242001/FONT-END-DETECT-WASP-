@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import debounce from "lodash.debounce";
 import "../index.css";
 import { useFormik } from "formik";
+import { ResolutionData, ResolutionSelect } from "../utils/resolutionData";
 import {
   ArrowLeftOutlined,
   DeleteOutlined,
@@ -325,9 +326,11 @@ function ListDevice(props) {
             <div
               key={index}
               className="flex flex-row"
-              style={{
-                borderBottom: " 0.5px solid #407fdd",
-              }}
+              style={
+                {
+                  // borderBottom: " 0.5px solid #407fdd",
+                }
+              }
             >
               <div
                 onClick={() => {
@@ -351,7 +354,7 @@ function ListDevice(props) {
                   {item.delayTime}s
                 </div>
                 <div className="w-1/4 font-semibold text-black h-[3.75rem] flex justify-center items-center">
-                  {item.resolution}
+                  {ResolutionData[item.resolution]}
                 </div>
                 <div className="w-1/4 font-semibold text-black h-[3.75rem] flex justify-center items-center">
                   {format(new Date(item.createdAt), "dd/MM/yyyy HH:mm:ss")}
@@ -494,19 +497,19 @@ function ListDevice(props) {
               }}
             />
             <p className="text-4 text-[#407fdd] font-medium mb-1">Resolution</p>
-            <input
+
+            <Select
               name="resolution"
               id="resolution"
-              type="number"
-              min={0}
-              onChange={formik.handleChange}
-              value={formik.values.resolution}
-              className="custom_input_search px-2 outline-none mb-4"
-              placeholder="resolution"
-              style={{
-                borderColor:
-                  formik.submitCount > 0 && formik.errors.resolution && "red",
+              size="middle"
+              value={String(formik.values.resolution)}
+              onChange={(e) => {
+                formik.setFieldValue("resolution", e);
               }}
+              style={{
+                color: "black",
+              }}
+              options={ResolutionSelect}
             />
           </div>
         </form>

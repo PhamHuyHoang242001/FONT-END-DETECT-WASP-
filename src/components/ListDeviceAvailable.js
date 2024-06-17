@@ -7,6 +7,7 @@ import { getData, updateData } from "../fetchMethod";
 import EmptyImage from "../assets/images/empty.png";
 import { Button, Image, Pagination } from "antd";
 import Search from "antd/es/transfer/search";
+import { ResolutionData } from "../utils/resolutionData";
 // import { useNavigate } from "react-router-dom";
 function ListDeviceAvailable(props) {
   const [state, setState] = useState({
@@ -106,9 +107,11 @@ function ListDeviceAvailable(props) {
             <div
               key={index}
               className="flex flex-row"
-              style={{
-                borderBottom: " 0.5px solid #407fdd",
-              }}
+              style={
+                {
+                  // borderBottom: " 0.5px solid #407fdd",
+                }
+              }
             >
               <div className="w-4/6 flex">
                 <div className="w-1/4 font-semibold text-black h-[3.75rem] flex justify-center items-center">
@@ -118,7 +121,7 @@ function ListDeviceAvailable(props) {
                   {item.delayTime}s
                 </div>
                 <div className="w-1/4 font-semibold text-black h-[3.75rem] flex justify-center items-center">
-                  {item.resolution}
+                  {ResolutionData[item.resolution]}
                 </div>
                 <div className="w-1/4 font-semibold text-black h-[3.75rem] flex justify-center items-center">
                   {format(new Date(item.createdAt), "dd/MM/yyyy HH:mm:ss")}
@@ -126,9 +129,9 @@ function ListDeviceAvailable(props) {
               </div>
               <div
                 className="w-1/6 font-semibold h-[3.75rem] flex justify-center items-center"
-                style={{ color: "red" }}
+                style={{ color: item.status ? "red" : "#87FF74" }}
               >
-                {item.status ? "Available" : "Sold"}
+                {item.status ? "Sold" : "Available"}
               </div>
               <div
                 className="w-1/6 font-semibold h-[3.75rem] flex justify-center  items-center"
