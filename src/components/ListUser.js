@@ -104,13 +104,17 @@ function ListUser() {
     setState((pre) => ({
       ...pre,
       checkRender: checkRender - 1,
+      page: 1,
     }));
+    setSearchValue("");
   };
   const onBack1 = () => {
     setState((pre) => ({
       ...pre,
       checkRender: checkRender + 1,
+      page: 1,
     }));
+    setSearchValue("");
   };
   const showDevices = (id12, listFarm) => {
     const x = listFarm.map((farm) => ({
@@ -271,6 +275,7 @@ function ListUser() {
                             checkRender: 0,
                             userId: item._id,
                             userName: item.name,
+                            userId: item._id,
                           }));
                           break;
                         case "4":

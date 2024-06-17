@@ -28,6 +28,10 @@ function ListFarm(props) {
         ...pre,
         isModalOpen: false,
       }));
+      formik.setFormikState((prev) => ({
+        ...prev,
+        submitCount: 0,
+      }));
     }
   };
   const DeleteFarm = async (farmId) => {
@@ -45,6 +49,10 @@ function ListFarm(props) {
     setState((pre) => ({
       ...pre,
       isModalOpen: false,
+    }));
+    formik.setFormikState((prev) => ({
+      ...prev,
+      submitCount: 0,
     }));
   };
   const formik = useFormik({
@@ -236,10 +244,11 @@ function ListFarm(props) {
               id="name"
               onChange={formik.handleChange}
               value={formik.values.name}
-              className={twMerge(
-                "custom_input_search px-2 outline-none mb-4",
-                formik.errors.name && "border-red-500"
-              )}
+              className={twMerge("custom_input_search px-2 outline-none mb-4")}
+              style={{
+                borderColor:
+                  formik.submitCount > 0 && formik.errors.name && "red",
+              }}
               placeholder="name"
             />
           </div>

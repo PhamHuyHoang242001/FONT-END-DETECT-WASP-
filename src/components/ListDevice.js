@@ -12,6 +12,8 @@ import { getData, updateData, createData, deleteData } from "../fetchMethod";
 import EmptyImage from "../assets/images/empty.png";
 import { Button, Image, Modal, Pagination, Select } from "antd";
 import Search from "antd/es/transfer/search";
+import * as Yup from "yup";
+
 // import { useNavigate } from "react-router-dom";
 function ListDevice(props) {
   const statusDevice = [
@@ -52,15 +54,30 @@ function ListDevice(props) {
   } = state;
   const handleOk = () => {
     formik.handleSubmit();
-    setState((pre) => ({
-      ...pre,
-      isModalOpen: false,
-    }));
+    if (
+      !formik.errors.name &&
+      !formik.errors.delayTime &&
+      !formik.errors.resolution
+    ) {
+      console.log(formik.errors);
+      setState((pre) => ({
+        ...pre,
+        isModalOpen: false,
+      }));
+      formik.setFormikState((prev) => ({
+        ...prev,
+        submitCount: 0,
+      }));
+    }
   };
   const handleCancel = () => {
     setState((pre) => ({
       ...pre,
       isModalOpen: false,
+    }));
+    formik.setFormikState((prev) => ({
+      ...prev,
+      submitCount: 0,
     }));
   };
   const updateSearchValue = useCallback(
@@ -80,6 +97,11 @@ function ListDevice(props) {
       delayTime: "",
       resolution: "",
     },
+    validationSchema: Yup.object().shape({
+      name: Yup.string().required("First name is required"),
+      delayTime: Yup.string().required("Delay Time is required"),
+      resolution: Yup.string().required("Resolution is required"),
+    }),
     onSubmit: (data) => {
       if (data.id) {
         updateDevice(data);
@@ -266,6 +288,7 @@ function ListDevice(props) {
                 setState((pre) => ({
                   ...pre,
                   status: e,
+                  page: 1,
                 }));
               }}
               style={{
@@ -432,31 +455,46 @@ function ListDevice(props) {
             <p className="text-4 text-[#407fdd] font-medium mb-1">Name</p>
             <input
               name="name"
+              id="name"
               type="text"
               onChange={formik.handleChange}
               value={formik.values.name}
               className="custom_input_search px-2 outline-none mb-4"
               placeholder="name"
+              style={{
+                borderColor:
+                  formik.submitCount > 0 && formik.errors.name && "red",
+              }}
             />
             <p className="text-4 text-[#407fdd] font-medium mb-1">Delay Time</p>
             <input
               name="delayTime"
+              id="delayTime"
               type="number"
               min={0}
               onChange={formik.handleChange}
               value={formik.values.delayTime}
               className="custom_input_search px-2 outline-none mb-4"
               placeholder="delayTime"
+              style={{
+                borderColor:
+                  formik.submitCount > 0 && formik.errors.delayTime && "red",
+              }}
             />
             <p className="text-4 text-[#407fdd] font-medium mb-1">Resolution</p>
             <input
               name="resolution"
+              id="resolution"
               type="number"
               min={0}
               onChange={formik.handleChange}
               value={formik.values.resolution}
               className="custom_input_search px-2 outline-none mb-4"
               placeholder="resolution"
+              style={{
+                borderColor:
+                  formik.submitCount > 0 && formik.errors.resolution && "red",
+              }}
             />
           </div>
         </form>

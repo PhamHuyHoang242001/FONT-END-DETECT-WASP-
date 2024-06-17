@@ -2,11 +2,10 @@ import { format } from "date-fns";
 import React, { useCallback, useEffect, useState } from "react";
 import debounce from "lodash.debounce";
 import "../index.css";
-import { useFormik } from "formik";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { getData, updateData, createData, deleteData } from "../fetchMethod";
+import { getData, updateData } from "../fetchMethod";
 import EmptyImage from "../assets/images/empty.png";
-import { Button, Image, Modal, Pagination, Select } from "antd";
+import { Button, Image, Pagination } from "antd";
 import Search from "antd/es/transfer/search";
 // import { useNavigate } from "react-router-dom";
 function ListDeviceAvailable(props) {
@@ -16,20 +15,9 @@ function ListDeviceAvailable(props) {
     page_size: 10,
     page: 1,
     searchValue: "",
-    deviceID: "",
   });
-  const {
-    count,
-    page,
-    page_size,
-
-    dataFarm,
-
-    searchValue,
-
-    deviceID,
-  } = state;
-
+  const { count, page, page_size, dataFarm, searchValue } = state;
+  console.log(props.userId);
   const updateSearchValue = useCallback(
     debounce((event) => {
       setState((pre) => ({
@@ -40,19 +28,6 @@ function ListDeviceAvailable(props) {
     }, 500),
     []
   );
-
-  const updateDevice = async (data) => {
-    const x = await updateData(
-      `http://103.176.178.96:8000/api/v1/camdevice/${data.id}`,
-      {
-        name: data.name,
-        delayTime: data.delayTime,
-        resolution: data.resolution,
-      }
-    );
-    getData1();
-    console.log(x);
-  };
 
   const getData1 = async () => {
     const res = await getData(
@@ -151,9 +126,9 @@ function ListDeviceAvailable(props) {
               </div>
               <div
                 className="w-1/6 font-semibold h-[3.75rem] flex justify-center items-center"
-                style={{ color: item.status ? "red" : "#87FF74" }}
+                style={{ color: "red" }}
               >
-                {item.status ? "Sold" : "Available"}
+                {item.status ? "Available" : "Sold"}
               </div>
               <div
                 className="w-1/6 font-semibold h-[3.75rem] flex justify-center  items-center"
