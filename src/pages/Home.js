@@ -5,7 +5,7 @@ import {
   LogoutOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Image, Layout, Menu, theme } from "antd";
+import { Layout, Menu } from "antd";
 import { useNavigate } from "react-router-dom";
 import ListUser from "../components/ListUser";
 import ListDevice from "../components/ListDevice";
@@ -16,13 +16,10 @@ function Home() {
   // const [collapsed, setCollapsed] = useState(false);
   const [selectedNav, setSelectedNav] = useState("1");
 
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-
   const handleMenuClick = (e) => {
     setSelectedNav(e.key);
     if (e.key === "4") {
+      localStorage.removeItem("userRole");
       navigate("/signin");
     }
   };
@@ -86,29 +83,11 @@ function Home() {
         </div>
       </Sider>
       <Layout>
-        {/* <Header
-          style={{
-            padding: 0,
-            background: colorBgContainer,
-          }}
-        >
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: "16px",
-              width: 64,
-              height: 64,
-            }}
-          />
-        </Header> */}
         <Content
           style={{
             padding: 16,
             minHeight: 280,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
+            backgroundColor: "#fff",
           }}
         >
           {selectedNav === "1" && <ListUser />}

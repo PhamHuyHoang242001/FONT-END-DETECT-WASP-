@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Form, Input } from "antd";
 import bg1 from "../assets/images/bg1.jpg";
 import { Link, useNavigate } from "react-router-dom";
 const SignUp = () => {

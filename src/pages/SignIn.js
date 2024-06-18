@@ -1,12 +1,37 @@
 import React from "react";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Form, Input, notification } from "antd";
 import bg1 from "../assets/images/bg1.jpg";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { createData } from "../fetchMethod";
 const SignIn = () => {
+  const [api, contextHolder] = notification.useNotification();
+
   const navigate = useNavigate();
-  const onFinish = (values) => {
-    console.log("Success:", values);
-    navigate("/");
+  const openNotificationWithIcon = (mess) => {
+    api.error({
+      message: <div className="text-red-700">ERROR</div>,
+      description: mess,
+    });
+  };
+  const onFinish = async (values) => {
+    try {
+      const x = await createData(`http://103.176.178.96:8000/api/v1/signin`, {
+        phone: values.email,
+        password: values.password,
+      });
+      if (x?.user && x?.user?.role === 1) {
+        localStorage.setItem("userRole", x?.user?.role);
+        navigate("/");
+        window.location.reload();
+      } else {
+        openNotificationWithIcon("Account has no permissions.");
+        console.log(x);
+      }
+    } catch (error) {
+      console.log(error);
+
+      openNotificationWithIcon("Account information is incorrect.");
+    }
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -18,6 +43,7 @@ const SignIn = () => {
       }}
       className="bg-black opacity-0.3 w-full  h-screen bg-no-repeat bg-cover pt-[10%]"
     >
+      {contextHolder}
       <Form
         name="basic"
         labelCol={{
@@ -32,7 +58,7 @@ const SignIn = () => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
-        className="p-10 bg-white w-1/3   mx-auto "
+        className="px-16 py-8 bg-white w-1/3   mx-auto "
         style={{
           borderRadius: "10px",
         }}
@@ -41,8 +67,8 @@ const SignIn = () => {
           Sign in
         </div>
         <Form.Item
-          label="Username"
-          name="username"
+          label="Email"
+          name="email"
           rules={[
             {
               required: true,
@@ -92,7 +118,7 @@ const SignIn = () => {
           </Button>
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           wrapperCol={{
             offset: 8,
             span: 16,
@@ -104,7 +130,7 @@ const SignIn = () => {
           >
             Create Account
           </Link>
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </div>
   );

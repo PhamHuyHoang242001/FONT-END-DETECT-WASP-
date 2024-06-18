@@ -8,7 +8,6 @@ import EmptyImage from "../assets/images/empty.png";
 import { Button, Image, Pagination } from "antd";
 import Search from "antd/es/transfer/search";
 import { ResolutionData } from "../utils/resolutionData";
-// import { useNavigate } from "react-router-dom";
 function ListDeviceAvailable(props) {
   const [state, setState] = useState({
     dataFarm: [],

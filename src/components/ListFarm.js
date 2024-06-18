@@ -14,7 +14,6 @@ import {
 import { getData, updateData, deleteData, createData } from "../fetchMethod";
 import { Button, Modal, Image } from "antd";
 import { twMerge } from "tailwind-merge";
-// import { useNavigate } from "react-router-dom";
 function ListFarm(props) {
   const [state, setState] = useState({
     isModalOpen: false,

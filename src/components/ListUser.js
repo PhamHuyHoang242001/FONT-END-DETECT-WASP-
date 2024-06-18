@@ -5,7 +5,6 @@ import Search from "antd/es/transfer/search";
 import { Button, Dropdown, Image, Modal, Pagination } from "antd";
 import {
   HomeOutlined,
-  UserSwitchOutlined,
   DeleteOutlined,
   EditOutlined,
   PlusSquareOutlined,
