@@ -15,8 +15,8 @@ const SignIn = () => {
   };
   const onFinish = async (values) => {
     try {
-      const x = await createData(`http://103.176.178.96:8000/api/v1/signin`, {
-        phone: values.email,
+      const x = await createData(`http://103.176.178.96:8000/api/v1/login`, {
+        email: values.email,
         password: values.password,
       });
       if (x?.user && x?.user?.role === 1) {
